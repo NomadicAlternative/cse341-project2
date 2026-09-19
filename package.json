@@ -1,0 +1,27 @@
+{
+  "name": "week3",
+  "version": "1.0.0",
+  "description": "Recipe Book API - CSE 341 Project 2 Part 1",
+  "main": "app.js",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "node --watch app.js",
+    "swagger": "node swagger.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-validator": "^7.2.1",
+    "mongoose": "^9.9.3",
+    "swagger-autogen": "^2.23.7",
+    "swagger-ui-express": "^5.0.1"
+  }
+}
