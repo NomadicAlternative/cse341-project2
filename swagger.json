@@ -1,0 +1,300 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Recipe Book API",
+    "description": "CSE 341 Project 2 — CRUD API for recipes and categories",
+    "version": "1.0.0"
+  },
+  "host": "localhost:8080",
+  "basePath": "/",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "paths": {
+    "/recipes/": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "category": {
+                  "example": "any"
+                },
+                "title": {
+                  "example": "any"
+                },
+                "description": {
+                  "example": "any"
+                },
+                "ingredients": {
+                  "example": "any"
+                },
+                "steps": {
+                  "example": "any"
+                },
+                "prepTimeMinutes": {
+                  "example": "any"
+                },
+                "cookTimeMinutes": {
+                  "example": "any"
+                },
+                "servings": {
+                  "example": "any"
+                },
+                "difficulty": {
+                  "example": "any"
+                },
+                "cuisine": {
+                  "example": "any"
+                },
+                "isPublished": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        }
+      }
+    },
+    "/recipes/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Recipe fields to update (at least one is required)",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "example": "Chicken Curry"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "A warming weeknight curry"
+                },
+                "ingredients": {
+                  "type": "array",
+                  "example": [
+                    "chicken",
+                    "curry paste",
+                    "coconut milk"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "steps": {
+                  "type": "array",
+                  "example": [
+                    "Brown the chicken",
+                    "Simmer 20 minutes"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "prepTimeMinutes": {
+                  "type": "number",
+                  "example": 15
+                },
+                "cookTimeMinutes": {
+                  "type": "number",
+                  "example": 25
+                },
+                "servings": {
+                  "type": "number",
+                  "example": 4
+                },
+                "difficulty": {
+                  "type": "string",
+                  "example": "easy"
+                },
+                "cuisine": {
+                  "type": "string",
+                  "example": "Indian"
+                },
+                "category": {
+                  "type": "string",
+                  "example": "507f1f77bcf86cd799439011"
+                },
+                "isPublished": {
+                  "type": "boolean",
+                  "example": true
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/categories/": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "example": "any"
+                },
+                "description": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        }
+      }
+    },
+    "/categories/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Category fields to update (at least one is required)",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "Desserts"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Sweet dishes served after a meal"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    }
+  }
+}

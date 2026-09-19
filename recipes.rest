@@ -1,0 +1,189 @@
+@host = http://localhost:8080
+@renderHost = https://CHANGE-ME.onrender.com
+
+# Ids captured from the create requests below. Running "Create category"
+# and "Create recipe" first fills these in for the id-based requests.
+@categoryId = {{createCategory.response.body._id}}
+@recipeId = {{createRecipe.response.body._id}}
+
+### Landing route — expect 200 with the text "Recipe Book API"
+GET {{host}}/
+
+### List all recipes — expect 200 with an array (newest first)
+GET {{host}}/recipes
+
+### Get one recipe by id — expect 200 (requires @recipeId to be filled)
+GET {{host}}/recipes/{{recipeId}}
+
+### Invalid id format — expect 400 "Invalid recipe id"
+GET {{host}}/recipes/bad-id
+
+### Valid id but no such recipe — expect 404 "Recipe not found"
+GET {{host}}/recipes/000000000000000000000000
+
+### Create category — expect 201 with the created document (captured as @categoryId)
+# @name createCategory
+POST {{host}}/categories
+Content-Type: application/json
+
+{
+  "name": "Desserts",
+  "description": "Sweet dishes served at the end of a meal"
+}
+
+### Create recipe referencing the created category — expect 201 (captured as @recipeId)
+# @name createRecipe
+POST {{host}}/recipes
+Content-Type: application/json
+
+{
+  "title": "Chocolate Chip Cookies",
+  "description": "Classic chewy cookies with dark chocolate chips",
+  "ingredients": ["flour", "butter", "sugar", "eggs", "chocolate chips"],
+  "steps": ["Mix dry ingredients", "Add wet ingredients", "Bake at 180C for 12 minutes"],
+  "prepTimeMinutes": 15,
+  "cookTimeMinutes": 12,
+  "servings": 24,
+  "difficulty": "easy",
+  "cuisine": "American",
+  "category": "{{categoryId}}",
+  "isPublished": true
+}
+
+### Create recipe with a missing required field — expect 400 Validation failed
+POST {{host}}/recipes
+Content-Type: application/json
+
+{
+  "title": "Incomplete Recipe",
+  "description": "This body omits servings and category"
+}
+
+### Create recipe with an invalid difficulty value — expect 400 Validation failed
+POST {{host}}/recipes
+Content-Type: application/json
+
+{
+  "title": "Invalid Difficulty Recipe",
+  "description": "difficulty is not one of the allowed values",
+  "ingredients": ["water"],
+  "steps": ["Boil"],
+  "prepTimeMinutes": 1,
+  "cookTimeMinutes": 1,
+  "servings": 1,
+  "difficulty": "impossible",
+  "cuisine": "Test",
+  "category": "{{categoryId}}"
+}
+
+### Partial update: change servings and isPublished — expect 200 with the updated document
+PUT {{host}}/recipes/{{recipeId}}
+Content-Type: application/json
+
+{
+  "servings": 12,
+  "isPublished": false
+}
+
+### Update with an empty body — expect 400 "Provide at least one field to update"
+PUT {{host}}/recipes/{{recipeId}}
+Content-Type: application/json
+
+{}
+
+### Delete the created recipe — expect 204 No Content
+DELETE {{host}}/recipes/{{recipeId}}
+
+### Delete a non-existent recipe — expect 404 "Recipe not found"
+DELETE {{host}}/recipes/000000000000000000000000
+
+### Root on Render — expect 200 "Recipe Book API" (replace @renderHost first)
+GET {{renderHost}}/
+
+### List all recipes on Render — expect 200
+GET {{renderHost}}/recipes
+
+### Get one recipe on Render — expect 200 (set @recipeId for the deployed db)
+GET {{renderHost}}/recipes/{{recipeId}}
+
+### Invalid id format on Render — expect 400
+GET {{renderHost}}/recipes/bad-id
+
+### Non-existent recipe on Render — expect 404
+GET {{renderHost}}/recipes/000000000000000000000000
+
+### Create category on Render — expect 201
+# @name createCategoryRender
+POST {{renderHost}}/categories
+Content-Type: application/json
+
+{
+  "name": "Desserts",
+  "description": "Sweet dishes served at the end of a meal"
+}
+
+### Create recipe on Render — expect 201
+# @name createRecipeRender
+POST {{renderHost}}/recipes
+Content-Type: application/json
+
+{
+  "title": "Chocolate Chip Cookies",
+  "description": "Classic chewy cookies with dark chocolate chips",
+  "ingredients": ["flour", "butter", "sugar", "eggs", "chocolate chips"],
+  "steps": ["Mix dry ingredients", "Add wet ingredients", "Bake at 180C for 12 minutes"],
+  "prepTimeMinutes": 15,
+  "cookTimeMinutes": 12,
+  "servings": 24,
+  "difficulty": "easy",
+  "cuisine": "American",
+  "category": "{{createCategoryRender.response.body._id}}",
+  "isPublished": true
+}
+
+### Create recipe with missing field on Render — expect 400
+POST {{renderHost}}/recipes
+Content-Type: application/json
+
+{
+  "title": "Incomplete Recipe",
+  "description": "This body omits servings and category"
+}
+
+### Create recipe with invalid difficulty on Render — expect 400
+POST {{renderHost}}/recipes
+Content-Type: application/json
+
+{
+  "title": "Invalid Difficulty Recipe",
+  "description": "difficulty is not one of the allowed values",
+  "ingredients": ["water"],
+  "steps": ["Boil"],
+  "prepTimeMinutes": 1,
+  "cookTimeMinutes": 1,
+  "servings": 1,
+  "difficulty": "impossible",
+  "cuisine": "Test",
+  "category": "{{createCategoryRender.response.body._id}}"
+}
+
+### Partial update on Render — expect 200
+PUT {{renderHost}}/recipes/{{createRecipeRender.response.body._id}}
+Content-Type: application/json
+
+{
+  "servings": 12,
+  "isPublished": false
+}
+
+### Empty body update on Render — expect 400
+PUT {{renderHost}}/recipes/{{createRecipeRender.response.body._id}}
+Content-Type: application/json
+
+{}
+
+### Delete recipe on Render — expect 204
+DELETE {{renderHost}}/recipes/{{createRecipeRender.response.body._id}}
+
+### Delete non-existent recipe on Render — expect 404
+DELETE {{renderHost}}/recipes/000000000000000000000000
