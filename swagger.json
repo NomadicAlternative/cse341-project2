@@ -5,10 +5,10 @@
     "description": "CSE 341 Project 2 — CRUD API for recipes and categories",
     "version": "1.0.0"
   },
-  "host": "localhost:8080",
+  "host": "cse341-project2-cd20.onrender.com",
   "basePath": "/",
   "schemes": [
-    "http"
+    "https"
   ],
   "paths": {
     "/recipes/": {

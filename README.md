@@ -85,6 +85,10 @@ deployed instance:
 SWAGGER_HOST=your-app.onrender.com npm run swagger
 ```
 
+The committed `swagger.json` is generated for the deployed service, so the file
+works as-is straight from the repository. Regenerating it for local development
+(`npm run swagger` with no `SWAGGER_HOST`) points it back at `localhost:8080`.
+
 ## Manual testing
 
 `recipes.rest` contains ready-to-run requests (including the expected status
