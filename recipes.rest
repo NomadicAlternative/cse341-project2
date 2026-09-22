@@ -1,10 +1,10 @@
 @host = http://localhost:8080
-@renderHost = https://CHANGE-ME.onrender.com
+@renderHost = https://cse341-project2-cd20.onrender.com
 
 # Ids captured from the create requests below. Running "Create category"
 # and "Create recipe" first fills these in for the id-based requests.
-@categoryId = {{createCategory.response.body._id}}
-@recipeId = {{createRecipe.response.body._id}}
+@categoryId = {{createCategory.response.body.$._id}}
+@recipeId = {{createRecipe.response.body.$._id}}
 
 ### Landing route — expect 200 with the text "Recipe Book API"
 GET {{host}}/
@@ -137,7 +137,7 @@ Content-Type: application/json
   "servings": 24,
   "difficulty": "easy",
   "cuisine": "American",
-  "category": "{{createCategoryRender.response.body._id}}",
+  "category": "{{createCategoryRender.response.body.$._id}}",
   "isPublished": true
 }
 
@@ -164,11 +164,11 @@ Content-Type: application/json
   "servings": 1,
   "difficulty": "impossible",
   "cuisine": "Test",
-  "category": "{{createCategoryRender.response.body._id}}"
+  "category": "{{createCategoryRender.response.body.$._id}}"
 }
 
 ### Partial update on Render — expect 200
-PUT {{renderHost}}/recipes/{{createRecipeRender.response.body._id}}
+PUT {{renderHost}}/recipes/{{createRecipeRender.response.body.$._id}}
 Content-Type: application/json
 
 {
@@ -177,13 +177,13 @@ Content-Type: application/json
 }
 
 ### Empty body update on Render — expect 400
-PUT {{renderHost}}/recipes/{{createRecipeRender.response.body._id}}
+PUT {{renderHost}}/recipes/{{createRecipeRender.response.body.$._id}}
 Content-Type: application/json
 
 {}
 
 ### Delete recipe on Render — expect 204
-DELETE {{renderHost}}/recipes/{{createRecipeRender.response.body._id}}
+DELETE {{renderHost}}/recipes/{{createRecipeRender.response.body.$._id}}
 
 ### Delete non-existent recipe on Render — expect 404
 DELETE {{renderHost}}/recipes/000000000000000000000000
