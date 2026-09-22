@@ -79,14 +79,6 @@ Content-Type: application/json
   "category": "{{categoryId}}"
 }
 
-### Malformed JSON body — expect 400 "Malformed JSON in request body"
-# The body below is deliberately not valid JSON. body-parser rejects it before
-# any route or validator runs, and the central error handler maps it to 400.
-POST {{host}}/recipes
-Content-Type: application/json
-
-{ "title": "Broken",
-
 ### Create category with an already used name — expect 409 "Duplicate key"
 # The name "Desserts" already exists in the database, so the unique index
 # rejects it. This block always returns 409, on every take.
