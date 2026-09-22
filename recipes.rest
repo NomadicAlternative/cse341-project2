@@ -1,4 +1,7 @@
-@host = http://localhost:8080
+@host = https://cse341-project2-cd20.onrender.com
+# Para probar contra tu maquina en vez del servidor publicado:
+#   1) corre "npm start" en el proyecto
+#   2) cambia la linea de arriba por:  @host = http://localhost:8080
 @renderHost = https://cse341-project2-cd20.onrender.com
 
 # Ids captured from the create requests below. Running "Create category"
@@ -27,7 +30,7 @@ POST {{host}}/categories
 Content-Type: application/json
 
 {
-  "name": "Desserts",
+  "name": "Desserts {{$timestamp}}",
   "description": "Sweet dishes served at the end of a meal"
 }
 
@@ -76,6 +79,25 @@ Content-Type: application/json
   "category": "{{categoryId}}"
 }
 
+### Malformed JSON body — expect 400 "Malformed JSON in request body"
+# The body below is deliberately not valid JSON. body-parser rejects it before
+# any route or validator runs, and the central error handler maps it to 400.
+POST {{host}}/recipes
+Content-Type: application/json
+
+{ "title": "Broken",
+
+### Create category with an already used name — expect 409 "Duplicate key"
+# The name "Desserts" already exists in the database, so the unique index
+# rejects it. This block always returns 409, on every take.
+POST {{host}}/categories
+Content-Type: application/json
+
+{
+  "name": "Desserts",
+  "description": "This name already exists"
+}
+
 ### Partial update: change servings and isPublished — expect 200 with the updated document
 PUT {{host}}/recipes/{{recipeId}}
 Content-Type: application/json
@@ -96,6 +118,41 @@ DELETE {{host}}/recipes/{{recipeId}}
 
 ### Delete a non-existent recipe — expect 404 "Recipe not found"
 DELETE {{host}}/recipes/000000000000000000000000
+
+### List all categories — expect 200
+GET {{host}}/categories
+
+### Get one category by id — expect 200 (requires @categoryId to be filled)
+GET {{host}}/categories/{{categoryId}}
+
+### Update the category — expect 200
+PUT {{host}}/categories/{{categoryId}}
+Content-Type: application/json
+
+{
+  "description": "Sweet dishes served at the end of a meal"
+}
+
+### Create category without name — expect 400 "Name is required"
+# Validation on POST for the second collection.
+POST {{host}}/categories
+Content-Type: application/json
+
+{
+  "description": "This body omits the required name"
+}
+
+### Update category with an empty name — expect 400 "Name is required"
+# Validation on PUT for the second collection.
+PUT {{host}}/categories/{{categoryId}}
+Content-Type: application/json
+
+{
+  "name": ""
+}
+
+### Delete the category — expect 204 No Content
+DELETE {{host}}/categories/{{categoryId}}
 
 ### Root on Render — expect 200 "Recipe Book API" (replace @renderHost first)
 GET {{renderHost}}/
@@ -118,7 +175,7 @@ POST {{renderHost}}/categories
 Content-Type: application/json
 
 {
-  "name": "Desserts",
+  "name": "Desserts Render {{$timestamp}}",
   "description": "Sweet dishes served at the end of a meal"
 }
 
