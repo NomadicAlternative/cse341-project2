@@ -66,6 +66,13 @@ Error responses are always JSON:
 - `409` for a duplicate key
 - `500` for anything unexpected
 
+### Error handling
+
+Every route handler in `controllers/` wraps its work in a `try/catch` block and
+forwards failures to a single 4-argument error middleware with `next(err)`. That
+middleware maps `HttpError`, Mongoose `ValidationError` and `CastError`, and
+duplicate-key errors (`11000`) to the status codes listed above.
+
 ## API documentation
 
 The interactive Swagger UI is served at `/api-docs`. It reads the generated

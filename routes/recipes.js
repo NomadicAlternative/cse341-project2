@@ -1,4 +1,7 @@
-// Express router for the /recipes resource
+// Express router for the /recipes resource.
+// The handlers these routes invoke live in controllers/recipes.js, and every
+// one of them wraps its work in a try/catch block that forwards failures to the
+// central error handler (middleware/errorHandler.js) with next(err).
 const express = require('express');
 const { body, param } = require('express-validator');
 
