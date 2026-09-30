@@ -4,12 +4,14 @@ require('dotenv').config();
 
 // Third-party libraries
 const express = require('express');
+const session = require('express-session');
 const swaggerUi = require('swagger-ui-express');
 // Generated Swagger document (produced by `npm run swagger`)
 const swaggerDocument = require('./swagger.json');
 
 // Own modules
 const connectDB = require('./db/connect');
+const passport = require('./middleware/passport');
 const { notFound, errorHandler } = require('./middleware/errorHandler');
 
 // Create the Express application
@@ -17,6 +19,20 @@ const app = express();
 
 // Parse JSON request bodies into req.body
 app.use(express.json());
+
+// Session store for the OAuth login. The cookie is httpOnly so client-side
+// JavaScript cannot read it, and it lasts one hour.
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: { httpOnly: true, maxAge: 1000 * 60 * 60 },
+  })
+);
+// Passport must be initialized after the session and before the routes
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Port from the environment (Render) or the local default
 const port = process.env.PORT || 8080;
@@ -29,7 +45,7 @@ app.get('/', (req, res) => {
 // Interactive API documentation
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-// Mount the central router (handles /recipes and /categories)
+// Mount the central router (handles /auth, /recipes and /categories)
 app.use('/', require('./routes'));
 
 // Unknown route -> JSON 404

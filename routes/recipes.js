@@ -14,6 +14,7 @@ const {
   deleteRecipe,
 } = require('../controllers/recipes');
 const validate = require('../middleware/validate');
+const { requiresAuth } = require('../middleware/authenticate');
 
 // Every route with :id must receive a well-formed ObjectId
 const idRule = param('id').isMongoId().withMessage('Invalid recipe id');
@@ -82,10 +83,16 @@ router.get('/', listRecipes);
 
 router.get('/:id', [idRule, validate], getRecipe);
 
-router.post('/', [...buildRecipeRules(false), validate], createRecipe);
+router.post(
+  '/',
+  /* #swagger.security = [{ "sessionAuth": [] }] */
+  [requiresAuth, ...buildRecipeRules(false), validate],
+  createRecipe
+);
 
 router.put(
   '/:id',
+  /* #swagger.security = [{ "sessionAuth": [] }] */
   /* #swagger.parameters['body'] = {
       in: 'body',
       description: 'Recipe fields to update (at least one is required)',
@@ -104,10 +111,15 @@ router.put(
           isPublished: true
       }
   } */
-  [idRule, ...buildRecipeRules(true), nonEmptyUpdate, validate],
+  [requiresAuth, idRule, ...buildRecipeRules(true), nonEmptyUpdate, validate],
   updateRecipe
 );
 
-router.delete('/:id', [idRule, validate], deleteRecipe);
+router.delete(
+  '/:id',
+  /* #swagger.security = [{ "sessionAuth": [] }] */
+  [requiresAuth, idRule, validate],
+  deleteRecipe
+);
 
 module.exports = router;

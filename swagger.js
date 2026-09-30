@@ -21,6 +21,27 @@ const doc = {
   // https blocks a plain http request (mixed content). So the scheme follows
   // the host: http for localhost, https for the deployed service.
   schemes: hostIsLocal ? ['http'] : ['https'],
+  // Security schemes. The write routes are guarded by requiresAuth, which
+  // checks the Passport session cookie created by the OAuth flow, so they are
+  // marked with `sessionAuth`. `githubOAuth` documents the login flow itself.
+  securityDefinitions: {
+    sessionAuth: {
+      type: 'apiKey',
+      in: 'header',
+      name: 'Cookie',
+      description:
+        'Passport session cookie created by the GitHub OAuth flow (start at GET /auth/github). Protected routes return 401 without it.',
+    },
+    githubOAuth: {
+      type: 'oauth2',
+      flow: 'accessCode',
+      authorizationUrl: 'https://github.com/login/oauth/authorize',
+      tokenUrl: 'https://github.com/login/oauth/access_token',
+      scopes: {
+        'user:email': 'Read the account primary email address',
+      },
+    },
+  },
 };
 
 const outputFile = './swagger.json';

@@ -14,6 +14,7 @@ const {
   deleteCategory,
 } = require('../controllers/categories');
 const validate = require('../middleware/validate');
+const { requiresAuth } = require('../middleware/authenticate');
 
 // Every route with :id must receive a well-formed ObjectId
 const idRule = param('id').isMongoId().withMessage('Invalid category id');
@@ -42,10 +43,16 @@ router.get('/', listCategories);
 
 router.get('/:id', [idRule, validate], getCategory);
 
-router.post('/', [...categoryRules(false), validate], createCategory);
+router.post(
+  '/',
+  /* #swagger.security = [{ "sessionAuth": [] }] */
+  [requiresAuth, ...categoryRules(false), validate],
+  createCategory
+);
 
 router.put(
   '/:id',
+  /* #swagger.security = [{ "sessionAuth": [] }] */
   /* #swagger.parameters['body'] = {
       in: 'body',
       description: 'Category fields to update (at least one is required)',
@@ -55,10 +62,15 @@ router.put(
           description: 'Sweet dishes served after a meal'
       }
   } */
-  [idRule, ...categoryRules(true), nonEmptyUpdate, validate],
+  [requiresAuth, idRule, ...categoryRules(true), nonEmptyUpdate, validate],
   updateCategory
 );
 
-router.delete('/:id', [idRule, validate], deleteCategory);
+router.delete(
+  '/:id',
+  /* #swagger.security = [{ "sessionAuth": [] }] */
+  [requiresAuth, idRule, validate],
+  deleteCategory
+);
 
 module.exports = router;
